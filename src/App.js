@@ -12,6 +12,10 @@ function App() {
     const digits = []
     for (let i =1;i<10;i++)
     {
+      if(i==5){
+        digits.push(<br></br>)
+      }
+      
       digits.push(
         <button onClick={()=> updateCalculation(i.toString())} className='btn-lg btn btn-dark m-1' key={i}>{i}</button>
       )
@@ -19,6 +23,23 @@ function App() {
   
     return digits
   }
+
+  //total calculation
+   const totalCalculation = () =>{
+     // update the set cal function in state
+      setCal(eval(cale).toString())
+   }
+
+   // del item
+   const deleteItem = () =>
+   {
+     if (cale=="")
+     {
+       return
+     }
+     const value = cale.slice(0,-1)
+     setCal(value)
+   }
 
 
   // setting the state
@@ -29,10 +50,25 @@ function App() {
 
   const updateCalculation = value =>
   {
-    // reduce side by side operator
-    
-
+    // reduce side by side operator 
+    // cal always cariess the latest display update
+    console.log("all data: ",cale);
+    console.log("last data: ",cale.slice(-1));
+    console.log("typed data: ",value);
+    let cale_last_item = cale.slice(-1)
+    if (operators.includes(value) && cale ==="" ||
+        operators.includes(value) && operators.includes(cale_last_item)    
+    )
+    {
+      return;
+    }
     setCal(cale+value)
+
+    // sum up the result
+    if (!operators.includes(value))
+    {
+      setResult(eval(cale+value).toString())
+    }
   }
 
 
@@ -46,7 +82,7 @@ function App() {
          <div className='row'>
            <div className='col'>
             <div className="display form-control">
-              {result ? <span>(0)</span>:''}
+              {result ? <span>({result})</span>:''}
               { cale || "0" }
             </div>
            </div>
@@ -59,7 +95,8 @@ function App() {
               <button onClick={()=> updateCalculation("-") } className='btn-lg btn btn-dark m-1'>-</button>
               <button onClick={()=> updateCalculation("/") } className='btn-lg btn btn-dark m-1'>/</button>
               <button onClick={()=> updateCalculation("*") } className='btn-lg btn btn-dark m-1'>*</button>
-              <button className='btn-lg btn btn-dark m-1'>DEL</button>
+              <button onClick={deleteItem} className='btn-lg btn btn-dark m-1 del-button'>DEL</button>
+
             </div>
            </div>
          </div>
@@ -72,11 +109,15 @@ function App() {
               <div className='col'>
               {CrateDigits()}
               </div>
-            </div>
-            <button onClick={()=> updateCalculation(".")} className='btn-lg btn btn-dark m-1'>.</button>
-            <button className='btn-lg btn btn-dark m-1'>=</button>
-            <button onClick={()=> updateCalculation("0")} className='btn-lg btn btn-dark m-1'>0</button>
+            </div>            
           </div>
+          <div className='row'>
+              <div className='col'>
+              <button onClick={()=> updateCalculation(".")} className='btn-lg btn btn-dark m-1'>.</button>
+              <button onClick={totalCalculation} className='btn-lg btn btn-dark m-1'>=</button>
+              <button onClick={()=> updateCalculation("0")} className='btn-lg btn btn-dark m-1'>0</button>
+              </div>
+            </div>
 
 
         </div>
